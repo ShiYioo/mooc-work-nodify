@@ -64,11 +64,6 @@ class MoocApiService(
                     return null
                 }
 
-                logger.info("MOOC API响应(前500字符): {}", responseBody.take(500))
-
-                // 打印完整响应以便调试（仅在开发时使用）
-                logger.debug("MOOC API完整响应: {}", responseBody)
-
                 val moocResponse = objectMapper.readValue(responseBody, MoocResponse::class.java)
 
                 if (moocResponse.code != 0) {
