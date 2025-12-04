@@ -3,6 +3,10 @@ application.yaml
 application-*.yaml
 !application-example.yaml
 
+# 环境变量配置（包含敏感信息）
+.env
+!.env.example
+
 # 日志文件
 logs/
 *.log

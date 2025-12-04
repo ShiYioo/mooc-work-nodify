@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "org.shiyi"
-version = "0.0.1-SNAPSHOT"
+version = "lastest"
 description = "mooc-work-nodify"
 
 java {

@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mooc-work-nodify:
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/azul/zulu-openjdk:21-linuxarm64
+    container_name: mooc-work-nodify
+    restart: unless-stopped
+    working_dir: /app
+
+    # 启动命令
+    command: ["java", "-Xms128m", "-Xmx256m", "-XX:+UseContainerSupport", "-jar", "/app/app.jar"]
+
+    # 挂载JAR包和配置文件
+    volumes:
+      # 挂载JAR包（必需）
+      - ./build/libs/mooc-work-nodify-lastest.jar:/app/app.jar:ro
+
+      # 挂载配置文件（必需）
+      - ./src/main/resources/application.yaml:/app/config/application.yaml:ro
+
+      # 日志持久化
+      - ./logs:/app/logs
+
+    # 环境变量配置
+    environment:
+      # 指定配置文件位置
+      - SPRING_CONFIG_LOCATION=file:/app/config/application.yaml
+
+      # 时区配置
+      - TZ=Asia/Shanghai
+
+    # 网络配置
+    networks:
+      - mooc-network
+
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# 网络
+networks:
+  mooc-network:
+    driver: bridge

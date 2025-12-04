@@ -351,6 +351,116 @@ if (shouldRemind && hoursUntilDeadline >= 0 && !isCompleted) {
 - 合理的异常处理
 - 详细的日志记录
 
+## 🐳 Docker部署
+
+### 前置步骤：构建JAR包
+
+在运行Docker之前，需要先构建JAR包：
+
+```bash
+# 构建JAR包
+./gradlew bootJar
+
+# 确认JAR包已生成
+ls build/libs/
+# 应该看到: mooc-work-nodify-0.0.1-SNAPSHOT.jar
+```
+
+### 方式一：使用Docker Compose（推荐）
+
+1. **配置环境变量**
+
+```bash
+# 复制环境变量模板
+cp .env.example .env
+
+# 编辑.env文件，填入你的配置
+nano .env
+```
+
+2. **构建并启动服务**
+
+```bash
+# 构建镜像并启动
+docker-compose up -d --build
+
+# 查看日志
+docker-compose logs -f
+
+# 停止服务
+docker-compose down
+```
+
+### 方式二：使用配置文件
+
+如果你更喜欢使用配置文件而不是环境变量：
+
+1. **准备配置文件**
+
+```bash
+cp src/main/resources/application-example.yaml src/main/resources/application.yaml
+# 编辑 application.yaml 填入你的配置
+```
+
+2. **修改docker-compose.yml**
+
+取消注释配置文件挂载行：
+```yaml
+volumes:
+  - ./src/main/resources/application.yaml:/app/config/application.yaml:ro
+```
+
+3. **启动服务**
+
+```bash
+docker-compose up -d --build
+```
+
+### 方式三：单独使用Docker
+
+```bash
+# 先构建JAR包
+./gradlew bootJar
+
+# 构建镜像
+docker build -t mooc-work-nodify .
+
+# 运行容器
+docker run -d \
+  --name mooc-work-nodify \
+  -e MAIL_HOST=smtp.163.com \
+  -e MAIL_PORT=465 \
+  -e MAIL_USERNAME=your-email@163.com \
+  -e MAIL_PASSWORD=your-auth-code \
+  -e MOOC_COOKIE="your-cookie" \
+  -e MOOC_CSRF_KEY=your-csrf-key \
+  -e MOOC_TERM_IDS=1475440469 \
+  -e NOTIFICATION_EMAIL_RECIPIENTS=recipient@example.com \
+  mooc-work-nodify
+```
+
+### Docker常用命令
+
+```bash
+# 查看容器状态
+docker-compose ps
+
+# 查看实时日志
+docker-compose logs -f mooc-work-nodify
+
+# 重启服务
+docker-compose restart
+
+# 重新构建并启动
+docker-compose up -d --build
+
+# 停止并删除容器
+docker-compose down
+
+# 停止并删除容器及数据卷
+docker-compose down -v
+```
+
 ## 🤝 贡献
 
 欢迎提交Issue和Pull Request！
