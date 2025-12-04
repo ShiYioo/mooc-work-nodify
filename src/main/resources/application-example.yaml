@@ -4,17 +4,20 @@ spring:
 
   # 邮件配置
   mail:
-    host: smtp.example.com          # 邮件服务器地址，如：smtp.qq.com, smtp.163.com, smtp.gmail.com
-    port: 587                        # 端口号，通常587或465
-    username: your-email@example.com # 发件人邮箱
-    password: your-email-password    # 邮箱授权码（不是登录密码）
+    host: smtp.163.com              # 邮件服务器地址，如：smtp.qq.com, smtp.163.com, smtp.gmail.com
+    port: 465                       # SSL端口（163/QQ邮箱使用465，Gmail使用587）
+    username: your-email@163.com    # 发件人邮箱
+    password: your-auth-code        # 邮箱授权码（不是登录密码，需要在邮箱设置中开启SMTP并获取授权码）
+    protocol: smtps                 # 使用SSL协议
     properties:
       mail:
         smtp:
           auth: true
-          starttls:
+          ssl:
             enable: true
-            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
     default-encoding: UTF-8
 
 # MOOC平台配置
@@ -72,8 +75,6 @@ logging:
     root: INFO
     org.shiyi.moocworknodify: INFO      # 应用日志级别
     org.springframework.mail: DEBUG     # 邮件发送日志（调试用）
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
     name: logs/mooc-work-notify.log     # 日志文件路径
 
