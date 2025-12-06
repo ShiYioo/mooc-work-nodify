@@ -435,6 +435,7 @@ docker run -d \
   -e MOOC_COOKIE="your-cookie" \
   -e MOOC_CSRF_KEY=your-csrf-key \
   -e MOOC_TERM_IDS=1475440469 \
+  -e MOOC_ADMIN_EMAIL=admin@example.com \
   -e NOTIFICATION_EMAIL_RECIPIENTS=recipient@example.com \
   mooc-work-nodify
 ```
